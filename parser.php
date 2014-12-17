@@ -3,6 +3,8 @@
 	require_once ( "inc/messages.php" ); // script that makes debugging look nice!
 	
 	define ("LIST_URL", "http://vip.aersia.net/roster.xml");
+	if ( set_time_limit(0) === false ) msg("Could not set the execution time of this script to infinite! If the script stops before downloading all songs, just refresh/re-execute it!", "warning");
+	
 	
 	// First Stage, Download the list:
 	
