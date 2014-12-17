@@ -7,7 +7,7 @@
 	// First Stage, Download the list:
 	
 	msg("Downloading playlist off of '<b>" . LIST_URL . "</b>'");
-	msg('Check changelog <a href="vip.aersia.net/changelog.txt">HERE</a>', "warning" );
+	msg('Check changelog <a href="http://vip.aersia.net/changelog.txt">HERE</a>', "warning" );
 	try{
 	
 		$xml = file_get_contents(LIST_URL);
@@ -50,16 +50,26 @@
 		
 			msg("Downloading track #$position/$total_tracks (<b>" . $track->creator . '- ' . $track->title . '</b>)');
 			
-			$track_binary = file_get_contents( $track->location );
-			if ( strlen( $track_binary ) == 0 ) throw new Exception ('Zero byte response'); 
-			
 			// Some playlist entries have invalid characters, this removes all of them, and replaces them with dots:
-			$filename = preg_replace('/[^a-zA-Z0-9-\s]/u', '', $track->creator);
-			$filename .= ' - ' . preg_replace('/[^a-zA-Z0-9-\s]/u', '', $track->title) . '.m4a';			
+			$filename = './music/'. preg_replace('/[^a-zA-Z0-9-\s]/u', '', $track->creator);
+			$filename .= ' - ' . preg_replace('/[^a-zA-Z0-9-\s]/u', '', $track->title) . '.m4a';	
+
+			if ( !file_exists( $filename ) ){
 			
-			$result = file_put_contents( './music/'. $filename, $track_binary );
+				$track_binary = file_get_contents( $track->location );
+				if ( strlen( $track_binary ) == 0 ) throw new Exception ('Zero byte response'); 
+				
+					
+				
+				$result = file_put_contents( $filename, $track_binary );
+				
+				if( $result === false ) throw new Exception("Error writing file, possible permission problem!");
 			
-			if( $result === false ) throw new Exception("Error writing file, possible permission problem!");
+			} else {
+			
+				msg("Already downloaded this track, skipping!");
+			
+			}
 		
 			$position++;
 		}
