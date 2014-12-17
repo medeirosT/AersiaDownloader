@@ -30,7 +30,9 @@
 		$html .= ucfirst($message_type) . ' </b>: ' . $message . '<br>';	// Add content, finish B tag, add BR
 		
 		if (DEBUG) echo $html;												// Output our message
+		
 		flush();															// Make sure to flush it, so it shows ASAP.
+		ob_flush();
 		
 		if ($stop) die();													// Die if we have to.		
 	
