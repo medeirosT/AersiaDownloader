@@ -50,7 +50,7 @@
 		$position = 1;
 		foreach ($tracks as $track){
 		
-			msg("Downloading track #$position/$total_tracks (<b>" . $track->creator . '- ' . $track->title . '</b>)');
+			msg("Downloading track #$position/$total_tracks (<b>" . $track->creator . ' - ' . $track->title . '</b>)');
 			
 			// Some playlist entries have invalid characters, this removes all of them, and replaces them with dots:
 			$filename = './music/'. preg_replace('/[^a-zA-Z0-9-\s]/u', '', $track->creator);
