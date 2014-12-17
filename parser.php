@@ -7,7 +7,7 @@
 	// First Stage, Download the list:
 	
 	msg("Downloading playlist off of '<b>" . LIST_URL . "</b>'");
-	
+	msg('Check changelog <a href="vip.aersia.net/changelog.txt">HERE</a>', "warning" );
 	try{
 	
 		$xml = file_get_contents(LIST_URL);
@@ -40,15 +40,24 @@
 		if (!$playlist) throw new Exception ("Failed to interpret XML response!");
 		
 		$tracks = $playlist->trackList->track;
+		$total_tracks = count( $tracks );
+		if ( $total_tracks === 0 ) throw new Exception ("Something went wrong, for some reason I got 0 tracks!");
 		
-		if ( count( $tracks ) === 0 ) throw new Exception ("Something went wrong, for some reason I got 0 tracks!");
+		msg("Found <b>$total_tracks</b>! Looping through all tracks and downloading them!", "success");
 		
-		msg("Found <b>" . count( $tracks ) . "</b>! Looping through all tracks and downloading them!", "success");
+		$position = 1;
 		foreach ($tracks as $track){
 		
-			var_dump($track);
-			die();
+			msg("Downloading track #$position/$total_tracks (<b>" . $track->creator . '- ' . $track->title . '</b>)');
+			
+			$track_binary = file_get_contents( $track->location );
+			if ( strlen( $track_binary ) == 0 ) throw new Exception ('Zero byte response'); 
+			
+			$result = file_put_contents( './music/'. $track->creator . '- ' . $track->title . '.m4a', $track_binary );
+			
+			if( $result === false ) throw new Exception("Error writing file, possible permission problem!");
 		
+			$position++;
 		}
 		
 		
@@ -58,3 +67,5 @@
 		
 	
 	}
+	
+	msg("Done, have a nice day! :)", "success", true);
