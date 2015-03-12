@@ -32,9 +32,6 @@
 	
 	// Second Stage, parse it:
 	try{
-	
-		msg("Escaping ampersands..."); // Apparently, SimpleXML has a little problem with escaped and some unescaped ampersands. This simple REGEX fixes that problem.
-		$xml = preg_replace('/&(?!;{6})/', '&amp;', $xml);
 		
 		msg("Interpreting XML...");
 		$playlist = simplexml_load_string($xml);
@@ -57,7 +54,7 @@
 			$filename .= ' - ' . preg_replace('/[^a-zA-Z0-9-\s]/u', '', $track->title) . '.m4a';	
 
 			if ( !file_exists( $filename ) ){
-			
+				
 				$track_binary = file_get_contents( $track->location );
 				if ( strlen( $track_binary ) == 0 ) throw new Exception ('Zero byte response'); 
 				
